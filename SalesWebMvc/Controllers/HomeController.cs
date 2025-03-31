@@ -20,6 +20,8 @@ public class HomeController : Controller
 
     public IActionResult Privacy()
     {
+        ViewData["email"] = "gmarques@r11travel.com.br";
+        ViewData["Message"] = "Salles web MVC";
         return View();
     }
 
