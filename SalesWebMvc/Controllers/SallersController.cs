@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SalesWebMvc.Models;
 using SalesWebMvc.Services;
 
 namespace SalesWebMvc.Controllers
@@ -17,6 +18,23 @@ namespace SalesWebMvc.Controllers
             var list = _sallerService.FindAll();
 
             return View(list);
+        }
+
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]//Previnir que sofra ataque CSRF
+        public IActionResult Create(Saller saller)
+        {
+            _sallerService.Insert(saller);
+
+            //redirecionando para o index usando nameof para caso o string mude, facil manuntencao
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -20,5 +20,11 @@ namespace SalesWebMvc.Services
             //acessando a tabela saller do context e convertendo para uma lista
            return _context.Saller.ToList();
         }
+
+        public void Insert(Saller obj)
+        {
+            _context.Add(obj);
+            _context.SaveChanges();
+        }
     }
 }

@@ -6,7 +6,6 @@ namespace SalesWebMvc.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
         public ICollection<Saller> Sallers { get; set; } = new List<Saller>();
 
         public Department() { }
