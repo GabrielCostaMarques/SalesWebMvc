@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SalesWebMvc.Models;
+using SalesWebMvc.Models.ViewModels;
 using SalesWebMvc.Services;
 
 namespace SalesWebMvc.Controllers
@@ -8,9 +9,12 @@ namespace SalesWebMvc.Controllers
     {
         //se o controller precisa do service, precisamos criar uma dependencia de service
         private readonly SallerService _sallerService;
-        public SallersController(SallerService sallerService)
+        private readonly DepartmentService _departmentService;
+
+        public SallersController(SallerService sallerService, DepartmentService departmentService)
         {
             _sallerService = sallerService;
+            _departmentService = departmentService;
         }
 
         public IActionResult Index()
@@ -23,7 +27,11 @@ namespace SalesWebMvc.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var departments=_departmentService.FindAll();
+
+            var viewModel=new SallerFormViewModel { Departments = departments };
+
+            return View(viewModel);
         }
 
 

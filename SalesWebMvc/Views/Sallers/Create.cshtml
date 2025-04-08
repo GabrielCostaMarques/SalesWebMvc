@@ -1,4 +1,4 @@
-﻿@model SalesWebMvc.Models.Saller
+﻿@model SalesWebMvc.Models.ViewModels.SallerFormViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -13,24 +13,29 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div class="form-group">
-                <label asp-for="Name" class="form-label"></label>
-                <input asp-for="Name" class="form-control"/>
+                <label asp-for="Saller.Name" class="form-label"></label>
+                <input asp-for="Saller.Name" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" />
+                <label asp-for="Saller.Email" class="form-label"></label>
+                <input asp-for="Saller.Email" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="BirthDate" class="form-label"></label>
-                <input asp-for="BirthDate" class="form-control" />
+                <label asp-for="Saller.BirthDate" class="form-label"></label>
+                <input asp-for="Saller.BirthDate" class="form-control" />
             </div>
             <div class="form-group">
-                <label asp-for="BaseSalary" class="form-label"></label>
-                <input asp-for="BaseSalary" class="form-control" />
+                <label asp-for="Saller.BaseSalary" class="form-label"></label>
+                <input asp-for="Saller.BaseSalary" class="form-control" />
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-success"/>
+                <label asp-for="Saller.DepartmentId" class="control-label"></label>
+                <select asp-for="Saller.DepartmentId" asp-items="@(new SelectList(Model.Departments,"Id","Name"))" class="form-control"></select>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-success" />
             </div>
         </form>
     </div>
