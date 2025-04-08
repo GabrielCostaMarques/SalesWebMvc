@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Data;
 using SalesWebMvc.Services;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
@@ -17,8 +20,17 @@ builder.Services.AddScoped<SallerService>();
 builder.Services.AddScoped<DepartmentService>();
 
 // Add services to the container.
-
 var app = builder.Build();
+
+//definindo o locale padrão
+var enUS = new CultureInfo("en-US");
+var localizationOptions = new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture(enUS),
+    SupportedCultures = new List<CultureInfo> { enUS },
+    SupportedUICultures = new List<CultureInfo> { enUS }
+};
+app.UseRequestLocalization(localizationOptions);
 
 //criando o escopo para rodar um metodo específico do meu seedingService
 using(var scope = app.Services.CreateScope())
