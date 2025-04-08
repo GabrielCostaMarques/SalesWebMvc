@@ -67,7 +67,24 @@ namespace SalesWebMvc.Controllers
         public IActionResult Delete(int id)
         {
             _sallerService.Remove(id);
-           return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            //colocando o value porque o obj ele pode ser nullable
+            var obj = _sallerService.FindById(id.Value);
+
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            return View(obj);
         }
     }
 }
