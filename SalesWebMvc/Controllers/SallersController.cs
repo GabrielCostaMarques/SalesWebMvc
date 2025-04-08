@@ -2,7 +2,6 @@
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
 using SalesWebMvc.Services;
-using SalesWebMvc.Services.Exceptions;
 using System.Diagnostics;
 
 namespace SalesWebMvc.Controllers
@@ -41,7 +40,7 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]//Previnir que sofra ataque CSRF
         public async Task<IActionResult> Create(Saller saller)
         {
-            Console.WriteLine($"Recebido: DepartmentId = {saller.DepartmentId}");
+           
             //definindo a regra de campo no lado do servidor
             if (!ModelState.IsValid)
             {

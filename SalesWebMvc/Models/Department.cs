@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SalesWebMvc.Models
+﻿namespace SalesWebMvc.Models
 {
     public class Department
     {

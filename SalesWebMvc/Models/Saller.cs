@@ -9,8 +9,6 @@ namespace SalesWebMvc.Models
 
 
         [Required(ErrorMessage ="{0} required")]
-
-        //definindo regra de campo os numeros definem os valores colocados nos parametros
         [StringLength(60,MinimumLength =3, ErrorMessage ="{0} size should be between {2} and {1}")]
         public string Name { get; set; }
 
@@ -35,10 +33,9 @@ namespace SalesWebMvc.Models
         public double BaseSalary { get; set; }
 
         //Associações com base no diagrama
-        public Department Department { get; set; }
+        public Department? Department { get; set; }
 
-        [Required(ErrorMessage = "Department is required")]
-        public int? DepartmentId { get; set; }
+        public int DepartmentId { get; set; }
 
 
         public ICollection<SalesRecord> Sales { get; set; } = new List<SalesRecord>();
