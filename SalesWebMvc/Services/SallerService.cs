@@ -1,6 +1,7 @@
 ﻿using SalesWebMvc.Data;
 using SalesWebMvc.Models;
 using Microsoft.EntityFrameworkCore;
+using SalesWebMvc.Services.Exceptions;
 
 namespace SalesWebMvc.Services
 {
@@ -31,7 +32,7 @@ namespace SalesWebMvc.Services
         public Saller FindById(int id)
         {
             //usando o include porque o FindById ele puxa o departamento apenas para retornar o saller, e nao o departamento
-            return _context.Saller.Include(obj=>obj.Department).FirstOrDefault(obj => obj.Id == id);
+            return _context.Saller.Include(obj => obj.Department).FirstOrDefault(obj => obj.Id == id);
         }
 
         public void Remove(int id)
@@ -39,6 +40,27 @@ namespace SalesWebMvc.Services
             var obj = _context.Saller.Find(id);
             _context.Saller.Remove(obj);
             _context.SaveChanges();
+        }
+
+        public void Update(Saller obj)
+        {
+            if (!_context.Saller.Any(x => x.Id == obj.Id))
+            {
+                throw new NotFoundException("Id Not Found");
+            }
+
+            try
+            {
+
+                _context.Update(obj);
+                _context.SaveChanges();
+
+            }
+
+            //o catch ele captura um exception da camada de acesso a dados, capturando essa exception criamos um exception a camada de serviço
+            catch (DbConcurrencyException ex) {
+                throw new DbConcurrencyException(ex.Message);
+            }
         }
     }
 }
