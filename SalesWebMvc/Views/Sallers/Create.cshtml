@@ -12,21 +12,26 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
+            <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Saller.Name" class="form-label"></label>
                 <input asp-for="Saller.Name" class="form-control" />
+                <span asp-validation-for="Saller.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Saller.Email" class="form-label"></label>
                 <input asp-for="Saller.Email" class="form-control" />
+                <span asp-validation-for="Saller.Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Saller.BirthDate" class="form-label"></label>
                 <input asp-for="Saller.BirthDate" class="form-control" />
+                <span asp-validation-for="Saller.BirthDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Saller.BaseSalary" class="form-label"></label>
                 <input asp-for="Saller.BaseSalary" class="form-control" />
+                <span asp-validation-for="Saller.BaseSalary" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -41,3 +46,9 @@
     </div>
 </div>
 
+@* Habilitando a validação por javascript lado do client *@
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
