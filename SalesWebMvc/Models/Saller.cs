@@ -37,7 +37,9 @@ namespace SalesWebMvc.Models
         //Associações com base no diagrama
         public Department Department { get; set; }
 
-        public int DepartmentId { get; set; }
+        [Required(ErrorMessage = "Department is required")]
+        public int? DepartmentId { get; set; }
+
 
         public ICollection<SalesRecord> Sales { get; set; } = new List<SalesRecord>();
 

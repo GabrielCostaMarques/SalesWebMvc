@@ -19,17 +19,17 @@ namespace SalesWebMvc.Controllers
             _departmentService = departmentService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var list = _sallerService.FindAll();
+            var list = await _sallerService.FindAllAsync();
 
             return View(list);
         }
 
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var departments = _departmentService.FindAll();
+            var departments = await _departmentService.FindAllAsync();
 
             var viewModel = new SallerFormViewModel { Departments = departments };
 
@@ -39,36 +39,32 @@ namespace SalesWebMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]//Previnir que sofra ataque CSRF
-        public IActionResult Create(Saller saller)
+        public async Task<IActionResult> Create(Saller saller)
         {
-
+            Console.WriteLine($"Recebido: DepartmentId = {saller.DepartmentId}");
             //definindo a regra de campo no lado do servidor
             if (!ModelState.IsValid)
             {
-
-                var departments = _departmentService.FindAll();
+                var departments = await _departmentService.FindAllAsync();
 
                 var viewModel = new SallerFormViewModel { Saller = saller, Departments = departments };
 
                 return View(viewModel);
             }
-
-            _sallerService.Insert(saller);
-
-
+            await _sallerService.InsertAsync(saller);
 
             //redirecionando para o index usando nameof para caso o string mude, facil manuntencao
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return RedirectToAction(nameof(Error), new{message="Id Not provided"});
             }
             //colocando o value porque o obj ele pode ser nullable
-            var obj = _sallerService.FindById(id.Value);
+            var obj = await _sallerService.FindByIdAsync(id.Value);
 
             if (obj == null)
             {
@@ -80,20 +76,20 @@ namespace SalesWebMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _sallerService.Remove(id);
-            return RedirectToAction(nameof(Index));
+            await _sallerService.RemoveAsync(id);
+             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id Not Provided" });
             }
             //colocando o value porque o obj ele pode ser nullable
-            var obj = _sallerService.FindById(id.Value);
+            var obj = await _sallerService.FindByIdAsync(id.Value);
 
             if (obj == null)
             {
@@ -103,21 +99,21 @@ namespace SalesWebMvc.Controllers
             return View(obj);
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if(id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id Not Provided" });
             }
 
-            var obj = _sallerService.FindById(id.Value);
+            var obj = await _sallerService.FindByIdAsync(id.Value);
 
             if(obj == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id Not Found" });
             }
 
-            List<Department> departments = _departmentService.FindAll();
+            List<Department> departments = await _departmentService.FindAllAsync();
 
             SallerFormViewModel viewModel = new SallerFormViewModel { Saller=obj,Departments=departments};
 
@@ -126,14 +122,14 @@ namespace SalesWebMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id,Saller saller)
+        public async Task<IActionResult> Edit(int id,Saller saller)
         {
 
             //definindo a regra de campo no lado do servidor
             if (!ModelState.IsValid)
             {
 
-                var departments= _departmentService.FindAll();
+                var departments= await _departmentService.FindAllAsync();
 
                 var viewModel = new SallerFormViewModel { Saller=saller,Departments=departments};
 
@@ -147,7 +143,7 @@ namespace SalesWebMvc.Controllers
 
             try
             {
-                _sallerService.Update(saller);
+                await _sallerService.UpdateAsync(saller);
                 return RedirectToAction(nameof(Index));
             }
             catch (ApplicationException ex)
