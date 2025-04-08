@@ -27,9 +27,9 @@ namespace SalesWebMvc.Controllers
 
         public IActionResult Create()
         {
-            var departments=_departmentService.FindAll();
+            var departments = _departmentService.FindAll();
 
-            var viewModel=new SallerFormViewModel { Departments = departments };
+            var viewModel = new SallerFormViewModel { Departments = departments };
 
             return View(viewModel);
         }
@@ -43,6 +43,31 @@ namespace SalesWebMvc.Controllers
 
             //redirecionando para o index usando nameof para caso o string mude, facil manuntencao
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            //colocando o value porque o obj ele pode ser nullable
+            var obj = _sallerService.FindById(id.Value);
+
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            _sallerService.Remove(id);
+           return RedirectToAction(nameof(Index));
         }
     }
 }
