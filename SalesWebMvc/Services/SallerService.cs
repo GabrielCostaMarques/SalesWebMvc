@@ -37,14 +37,21 @@ namespace SalesWebMvc.Services
 
         public async Task RemoveAsync(int id)
         {
-            var obj = await _context.Saller.FindAsync(id);
-            _context.Saller.Remove(obj);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var obj = await _context.Saller.FindAsync(id);
+                _context.Saller.Remove(obj);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                throw new IntegrityException(e.Message);
+            }
         }
 
         public async Task UpdateAsync(Saller obj)
         {
-            bool hasAny =  await _context.Saller.AnyAsync(x => x.Id == obj.Id);
+            bool hasAny = await _context.Saller.AnyAsync(x => x.Id == obj.Id);
 
             if (!hasAny)
             {
@@ -60,7 +67,8 @@ namespace SalesWebMvc.Services
             }
 
             //o catch ele captura um exception da camada de acesso a dados, capturando essa exception criamos um exception a camada de serviço
-            catch (DbConcurrencyException ex) {
+            catch (DbConcurrencyException ex)
+            {
                 throw new DbConcurrencyException(ex.Message);
             }
         }

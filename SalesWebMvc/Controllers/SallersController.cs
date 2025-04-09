@@ -2,6 +2,7 @@
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
 using SalesWebMvc.Services;
+using SalesWebMvc.Services.Exceptions;
 using System.Diagnostics;
 
 namespace SalesWebMvc.Controllers
@@ -40,7 +41,7 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]//Previnir que sofra ataque CSRF
         public async Task<IActionResult> Create(Saller saller)
         {
-           
+
             //definindo a regra de campo no lado do servidor
             if (!ModelState.IsValid)
             {
@@ -60,7 +61,7 @@ namespace SalesWebMvc.Controllers
         {
             if (id == null)
             {
-                return RedirectToAction(nameof(Error), new{message="Id Not provided"});
+                return RedirectToAction(nameof(Error), new { message = "Id Not provided" });
             }
             //colocando o value porque o obj ele pode ser nullable
             var obj = await _sallerService.FindByIdAsync(id.Value);
@@ -77,8 +78,16 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            await _sallerService.RemoveAsync(id);
-             return RedirectToAction(nameof(Index));
+
+            try
+            {
+                await _sallerService.RemoveAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (IntegrityException ex)
+            {
+                return RedirectToAction(nameof(Error), new { message = ex.Message});
+            }
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -100,37 +109,37 @@ namespace SalesWebMvc.Controllers
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id Not Provided" });
             }
 
             var obj = await _sallerService.FindByIdAsync(id.Value);
 
-            if(obj == null)
+            if (obj == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id Not Found" });
             }
 
             List<Department> departments = await _departmentService.FindAllAsync();
 
-            SallerFormViewModel viewModel = new SallerFormViewModel { Saller=obj,Departments=departments};
+            SallerFormViewModel viewModel = new SallerFormViewModel { Saller = obj, Departments = departments };
 
             return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id,Saller saller)
+        public async Task<IActionResult> Edit(int id, Saller saller)
         {
 
             //definindo a regra de campo no lado do servidor
             if (!ModelState.IsValid)
             {
 
-                var departments= await _departmentService.FindAllAsync();
+                var departments = await _departmentService.FindAllAsync();
 
-                var viewModel = new SallerFormViewModel { Saller=saller,Departments=departments};
+                var viewModel = new SallerFormViewModel { Saller = saller, Departments = departments };
 
                 return View(viewModel);
             }
